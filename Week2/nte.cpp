@@ -4,19 +4,29 @@
 
 using namespace std;
 
+// ============================
 // SYSTEM CALL
+// ============================
+
 void ScrollScreen() { cout << "\x1b[2J"; };
 void CursorToHome() { cout << "\x1b[H"; }
 void ClearScreen();
 char GetInput();
 
-// Layout
+// ============================
+// LAYOUT
+// ============================
+
 void MainMenu_Layout();
 void Alphabet_Table_Layout();
+void PrimeNumberFinder_Layout();
+void GCD_HCF_Calculator_Layout();
+void ASCII_Art_Layout();
 void MagicDonut_Layout(int totalFrame);
 
-// 
-
+// ============================
+// MAIN PROGRAM
+// ============================
 int main()
 {
 	ScrollScreen();
@@ -30,16 +40,28 @@ int main()
 			case '1':
 				Alphabet_Table_Layout();
 				break;
+			case '2':
+				PrimeNumberFinder_Layout();
+				break;
+			case '3':
+				GCD_HCF_Calculator_Layout();
+				break;
+			case '4':
+				ASCII_Art_Layout();
+				break;
 			case '5':
 				MagicDonut_Layout(33 * 5); // 5 secs
 				break;
 		}
 		ans = GetInput();
 	}
-	ClearScreen();
 
+	ClearScreen();
 	return 0;
 }
+// ============================
+// SYSTEM CALL IMPLEMENT
+// ============================
 
 void ClearScreen()
 {
@@ -66,18 +88,24 @@ char GetInput()
   return input;
 }
 
+// ============================
+// LAYOUT IMPLEMENT
+// ============================
+
+// ----------------------------------------------------
 void MainMenu_Layout()
 {
 	ClearScreen();
 	cout << "=== MAIN MENU ===" << endl
 		 << "[1] Print Alphabet Table" << endl
-		 << "[2] Prime Number" << endl
-		 << "[3] GCD" << endl
-		 << "[4] Draw Something" << endl
+		 << "[2] Find Prime Number In Range" << endl
+		 << "[3] GCD & HCF Calculator" << endl
+		 << "[4] ASCII Art Library" << endl
 		 << "[5] Magic Donut" << endl
 		 << "[x] Exit";
 }
 
+// ----------------------------------------------------
 void Alphabet_Table_Layout()
 {
 	ClearScreen();
@@ -95,6 +123,57 @@ void Alphabet_Table_Layout()
 		 << "[x] Exit";
 }
 
+// ----------------------------------------------------
+bool IsPrime(long n) {
+	if (n < 2)
+		return false;
+
+	for (long i = 2; i <= sqrt(n); i++)
+		if (n % i == 0) return false;
+
+	return true;
+}
+
+void PrimeNumberFinder_Layout()
+{
+	ClearScreen();
+	cout << "=== Prime Number Finder ===" << endl
+		 << "Enter finding range (a, b)." << endl;
+
+	long a, b;
+	cout << "a = ";
+	cin >> a;
+	cout << "b = ";
+	cin >> b;
+
+	cout << "Prime numbers in range (" << a << "," << b << "):" << endl;
+
+	int counter = 0;
+	for (long k = a; k <= b; k++) {
+		if (IsPrime(k)) {
+			cout << k << endl;
+			counter++;
+		}
+	}
+
+	cout << "There are " << counter << " prime numbers!" << endl
+		 << "[0] Back" << endl
+		 << "[x] Exit";
+}
+
+// ----------------------------------------------------
+void GCD_HCF_Calculator_Layout()
+{
+
+}
+
+// ----------------------------------------------------
+void ASCII_Art_Layout()
+{
+
+}
+
+// ----------------------------------------------------
 void PrintProcess(float t)
 {
 	cout << "Process: [";
