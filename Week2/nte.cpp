@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <unistd.h>
 
 using namespace std;
@@ -23,6 +24,13 @@ void PrimeNumberFinder_Layout();
 void GCD_HCF_Calculator_Layout();
 void ASCII_Art_Layout();
 void MagicDonut_Layout(int totalFrame);
+
+// ============================
+// CONST
+// ============================
+const string art_lib_db_file_path = "art-lib-db.dat";
+const string art_lib_folder_path = "art-lib/";
+
 
 // ============================
 // MAIN PROGRAM
@@ -153,6 +161,7 @@ void PrimeNumberFinder_Layout()
 		if (IsPrime(k)) {
 			cout << k << endl;
 			counter++;
+			usleep(100000);
 		}
 	}
 
@@ -162,15 +171,80 @@ void PrimeNumberFinder_Layout()
 }
 
 // ----------------------------------------------------
+long gcd(long a, long b)
+{
+    if (b == 0)
+        return a;
+    return gcd(b, a % b); 
+}
+
+long hcf(long a, long b)
+{
+	return a * b / gcd(a, b);
+}
+
 void GCD_HCF_Calculator_Layout()
 {
+	ClearScreen();
+	cout << "=== GCD-HCF Calculator ===" << endl
+		 << "Enter 2 numbers to calculate (a, b)." << endl;
 
+	long a, b;
+	cout << "a = ";
+	cin >> a;
+	cout << "b = ";
+	cin >> b;
+
+	cout << endl
+		 << "    GCD(" << a << "," << b << ") = " << gcd(a, b) << endl
+		 << "    HCF(" << a << "," << b << ") = " << hcf(a, b) << endl << endl;
+
+	cout << "[0] Back" << endl
+		 << "[x] Exit";
 }
 
 // ----------------------------------------------------
 void ASCII_Art_Layout()
 {
+	ClearScreen();
+	cout << "=== ASCII Art Library ===" << endl;
 
+	string art_name;
+	ifstream art_lib_db_file(art_lib_db_file_path);
+
+	int art_counter = 0;
+	while (getline(art_lib_db_file, art_name)) {
+		if (art_counter % 3 == 0)
+			cout << endl << "    ";
+		art_counter++;
+
+		cout << art_name << "   ";
+	}
+
+	art_lib_db_file.close();
+
+	string art_select_name;
+	cout << endl << endl
+		 << "Show Art: ";
+
+	cin >> art_select_name;
+
+	string art_render_line;
+	ifstream art_file(art_lib_folder_path + art_select_name + ".dat");
+	if (art_file) {
+		ClearScreen();
+		cout << "=== " + art_select_name + " ===" << endl;
+
+		// Drawing
+		while (getline(art_file, art_render_line))
+			cout << art_render_line << endl;
+	} else {
+		cout << "Sorry, art named \"" + art_select_name + "\" doesn't exist!" << endl;
+	}
+	art_file.close();
+
+	cout << "[0] Back" << endl
+		 << "[x] Exit";
 }
 
 // ----------------------------------------------------
