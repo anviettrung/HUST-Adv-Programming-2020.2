@@ -12,3 +12,6 @@
 
 # Ignore log file
 *.log
+
+# Ignore mov
+*.mov
