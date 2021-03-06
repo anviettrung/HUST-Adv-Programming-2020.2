@@ -21,7 +21,7 @@ void ScrollScreen();
 void CursorToHome();
 void ClearScreen();
 char GetInput();
-string GetCurrentTime() {
+string avtGetCurrentTime() {
 	time_t now = time(0);
 	return ctime(&now);}
 
@@ -389,7 +389,7 @@ void Log_Layout()
 void Write_Log(char cmd_code)
 {
 	if (log_activity_name.find(cmd_code) != log_activity_name.end())
-		log_file << GetCurrentTime() << "   " << log_activity_name[cmd_code] << endl;
+		log_file << avtGetCurrentTime() << "   " << log_activity_name[cmd_code] << endl;
 }
 
 
