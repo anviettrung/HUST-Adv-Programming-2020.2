@@ -1,7 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <math.h>
 #include <unistd.h>
+#include <ctime>
+#include <map>
+
+#ifdef _WIN32
+#include <conio.h>
+#include <windows.h>
+#endif
 
 using namespace std;
 
@@ -9,10 +17,13 @@ using namespace std;
 // SYSTEM CALL
 // ============================
 
-void ScrollScreen() { cout << "\x1b[2J"; };
-void CursorToHome() { cout << "\x1b[H"; }
+void ScrollScreen();
+void CursorToHome();
 void ClearScreen();
 char GetInput();
+string GetCurrentTime() {
+	time_t now = time(0);
+	return ctime(&now);}
 
 // ============================
 // LAYOUT
@@ -24,13 +35,38 @@ void PrimeNumberFinder_Layout();
 void GCD_HCF_Calculator_Layout();
 void ASCII_Art_Layout();
 void MagicDonut_Layout(int totalFrame);
+void Log_Layout();
 
 // ============================
 // CONST
 // ============================
 const string art_lib_db_file_path = "art-lib-db.dat";
 const string art_lib_folder_path = "art-lib/";
+const string log_file_path = "nte-activity.log";
 
+// ============================
+// Log
+// ============================
+fstream log_file;
+map<char, string> log_activity_name;
+const int log_recent_n = 5;
+
+void Init_Log() {
+	log_activity_name['s'] = "Open PROGRAM";
+	log_activity_name['0'] = "Return to Main Menu.";
+	log_activity_name['1'] = "Print Alphabet Table";
+	log_activity_name['2'] = "Find Prime Numbers";
+	log_activity_name['3'] = "Calculate GCD & HCF";
+	log_activity_name['4'] = "View ASCII Art Library";
+	log_activity_name['5'] = "Watch Magic Donut";
+	log_activity_name['o'] = "View Log File";
+	log_activity_name['x'] = "Exit PROGRAM";
+
+
+	log_file.open(log_file_path, fstream::app); 
+}
+void End_Log() { log_file.close(); }
+void Write_Log(char cmd_code);
 
 // ============================
 // MAIN PROGRAM
@@ -38,6 +74,9 @@ const string art_lib_folder_path = "art-lib/";
 int main()
 {
 	ScrollScreen();
+
+	Init_Log();
+	Write_Log('s');
 
 	char ans = '0';
 	while (ans != 'x') {
@@ -60,9 +99,15 @@ int main()
 			case '5':
 				MagicDonut_Layout(33 * 5); // 5 secs
 				break;
+			// case 'o':
+			// 	Log_Layout();
+			// 	break;
 		}
 		ans = GetInput();
+		Write_Log(ans);
 	}
+
+	End_Log();
 
 	ClearScreen();
 	return 0;
@@ -70,6 +115,23 @@ int main()
 // ============================
 // SYSTEM CALL IMPLEMENT
 // ============================
+void ScrollScreen() 
+{ 
+	#ifdef _WIN32
+		system("clear");
+	#else
+		cout << "\x1b[2J"; 
+	#endif
+};
+void CursorToHome() 
+{
+	#ifdef _WIN32
+		COORD p = {0, 0};
+		SetConsoleCursorPosition( GetStdHandle( STD_OUTPUT_HANDLE ), p);
+	#else
+		cout << "\x1b[H";
+	#endif 
+}
 
 void ClearScreen()
 {
@@ -79,19 +141,24 @@ void ClearScreen()
 	for(int i = 0; i <= lines * 80; i++) {
         putchar(i % 80 ? ' ' : 10); // 10 = [Line Feed]
     }
+
     CursorToHome();
 }
 
 char GetInput()
 {
-  // Set terminal to raw mode 
-  system("stty raw"); 
+	#ifdef _WIN32
+		char input = getch();
+	#else
+		// Set terminal to raw mode 
+		system("stty raw"); 
 
-  // Wait for single character 
-  char input = getchar(); 
+		// Wait for single character 
+		char input = getchar(); 
 
-  // Reset terminal to normal "cooked" mode 
-  system("stty cooked"); 
+		// Reset terminal to normal "cooked" mode 
+		system("stty cooked"); 
+	#endif 
 
   return input;
 }
@@ -310,4 +377,19 @@ void MagicDonut_Layout(int totalFrame)
     cout << "[0] Back" << endl
 		 << "[x] Exit";
 }
+
+// ----------------------------------------------------
+void Log_Layout()
+{
+	ClearScreen();
+	cout << "=== Activity Log ===" << endl;
+	cout << log_recent_n << " recent activities:" << endl;
+}
+
+void Write_Log(char cmd_code)
+{
+	if (log_activity_name.find(cmd_code) != log_activity_name.end())
+		log_file << GetCurrentTime() << "   " << log_activity_name[cmd_code] << endl;
+}
+
 
