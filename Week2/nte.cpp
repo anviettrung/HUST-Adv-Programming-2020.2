@@ -21,9 +21,7 @@ void ScrollScreen();
 void CursorToHome();
 void ClearScreen();
 char GetInput();
-string avtGetCurrentTime() {
-	time_t now = time(0);
-	return ctime(&now);}
+string avtGetCurrentTime();
 
 // ============================
 // LAYOUT
@@ -139,10 +137,10 @@ void ClearScreen()
 
 	int lines = 26;
 	for(int i = 0; i <= lines * 80; i++) {
-        putchar(i % 80 ? ' ' : 10); // 10 = [Line Feed]
-    }
+		putchar(i % 80 ? ' ' : 10); // 10 = [Line Feed]
+	}
 
-    CursorToHome();
+	CursorToHome();
 }
 
 char GetInput()
@@ -161,6 +159,12 @@ char GetInput()
 	#endif 
 
   return input;
+}
+
+string avtGetCurrentTime() 
+{
+	time_t now = time(0);
+	return ctime(&now);
 }
 
 // ============================
