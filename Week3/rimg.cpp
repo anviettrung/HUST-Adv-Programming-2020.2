@@ -45,8 +45,6 @@ void PrintImage(uint8_t* img, int std_w, int std_h, int new_w, int new_h)
 	float w_ratio = (float)std_w / new_w;
 	float h_ratio = (float)std_h / new_h; 
 
-	cout << w_ratio << " " << h_ratio << endl;
-
 	for (int y = 0; y < new_h; y++) {
 		for (int x = 0; x < new_w; x++) {
 			x_coord = (int)round(x * w_ratio);
@@ -82,7 +80,7 @@ int main(int argc, char* argv[]) {
 
 	    stbi_image_free(rgb_image);
 	} else {
-		cout << "\"" << fileName << "\"" << " doesn't exist!";
+		cout << "\"" << fileName << "\"" << " doesn't exist!" << endl;
 	}
 
     return 0;
