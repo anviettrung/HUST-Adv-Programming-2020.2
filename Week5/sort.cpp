@@ -29,7 +29,10 @@ void Merge(int* a, int left, int mid, int right, SortOrder ordered);
 void HeapSort(int* a, int n, SortOrder ordered);
 void Heapify(int* a, int n, int nodeID, SortOrder ordered);
 // --------------------------------
-// int QuickSort(int* a, int n, SortOrder ordered);
+void QuickSort(int* a, int n, SortOrder ordered);
+void QuickSortFullCall(int* a, int low, int high, SortOrder ordered);
+int  Partition(int* a, int low, int high, SortOrder ordered);
+// --------------------------------
 // int ShellSort(int* a, int n, SortOrder ordered);
 // int CountingSort(int* a, int n, SortOrder ordered);
 
@@ -38,7 +41,8 @@ SortFunction f_sorts[] = {
 	SelectionSort,
 	BubbleSort,
 	MergeSort,
-	HeapSort
+	HeapSort,
+	QuickSort
 };
 
 int main()
@@ -235,7 +239,36 @@ void Heapify(int* a, int n, int nodeID, SortOrder ordered)
 	}
 }
 // --------------------------------
+void QuickSort(int* a, int n, SortOrder ordered)
+{
+	QuickSortFullCall(a, 0, n-1, ordered);
+}
+void QuickSortFullCall(int* a, int low, int high, SortOrder ordered)
+{
+	if (low < high) {
+		int p_index = Partition(a, low, high, ordered);
 
-// int QuickSort(int** a, int n, SortOrder ordered);
+		QuickSortFullCall(a, low, p_index-1, ordered);
+		QuickSortFullCall(a, p_index+1, high, ordered);
+	}
+}
+int  Partition(int* a, int low, int high, SortOrder ordered)
+{
+	int pivot = a[high];
+	int i = (low-1);
+
+	for (int j = low; j <= high - 1; j++)
+	{
+		// If current element is smaller than the pivot
+		if (ordered(a[j], pivot)) {
+			i++; // increment index of smaller element
+			Swap(&a[i], &a[j]);
+		}
+    }
+	Swap(&a[i + 1], &a[high]);
+
+    return (i + 1);
+}
+// --------------------------------
 // int ShellSort(int** a, int n, SortOrder ordered);
 // int CountingSort(int** a, int n, SortOrder ordered);
