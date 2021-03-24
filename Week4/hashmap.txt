@@ -1,0 +1,137 @@
+map<char, string> hashmap;
+
+// ----------------------------------------------------
+Các thao tác trên hash map
+thêm 1 phần tử vào hashmap
+khoá (tiêu chí để truy xuất) nó không phải số nguyên
+truy xuất phần tử có key là X
+// ----------------------------------------------------
+Ví dụ:
+Tạo 1 mảng lưu danh sách lớp
+
+Người dùng: Nhập tên 1 người string, kiểm tra xem có tồn tại trong danh sách
+
+từ điển
+
+khoá là 1 từ
+giá trị sẽ định nghĩa của từ
+
+map<string, string> tudien;
+
+tudien["Hello"] = "Xin chao";
+tudien["Image"] = "Hinh anh";
+
+if (tudien.contains("Hi"))
+	cout << tudien["Hi"]
+else
+	cout << "Khong ton tai";
+
+if (tudien.contains("Hello"))
+	cout << tudien["Hello"] -> "Xin chao"
+
+int a[10];
+int* b = new int[10];
+
+// ----------------------------------------------------
+Ví dụ code tự implement hash table với khoá là Char, giá trị là int
+
+struct PhanTu {
+	char khoa;
+	int value;
+}
+
+struct MapCharInt {
+	int p = ngto;
+	PhanTu* bucket[p];
+}
+
+void Add(MapCharInt table, char key, int value)
+{
+	int bucketID = (int)key % p; // (0, p-1)
+
+	table.bucket[bucketID] <- them phantu (key, value)
+}
+
+bool Contains(MapCharInt table, char key)
+{
+	int bucketID = (int)key % p;
+
+	for (int i = 0; i < table.bucket[bucketID].length; i++)
+		if (table.bucket[bucketID][i].khoa == key)
+			return true;
+
+	return false;
+}
+
+// ----------------------------------------------------
+Ví dụ khi chạy code
+bucket 1: []
+bucket 2: [x1, x3]
+bucket 3: [x2]
+
+Thêm phần tử x1 = ('a', 500)
+Thêm phần tử x2 = ('b', 1100)
+Thêm phần tử x3 = ('x', 60)
+
+if (contains('x')) -> bucketID = 2
+// ----------------------------------------------------
+Nhập vào dãy kí tự, xem kí tự nào xuất hiện nhiều nhất
+
+MapCharInt tables; // tương đương map<char, int>
+
+tables['a'] -> số lần xuất hiện của a
+
+s = "jaja##ss"
+
+for (int i = 0; i < s.length; i++) {
+    if (contains(s[i]) == false)
+        tables[s[i]] = 0;
+
+    tables[s[i]] += 1;
+}
+
+key in ('j', 'a', 's', '#');
+
+// Tìm tất cả key trong table
+char[] GetAllKey(MapCharInt table)
+{
+    char result[100];
+
+    int k = 0;
+    for (int i = 0; i < table.p; i++) {
+        for (int j = 0; j < table.bucket[i].length; j++) {
+            // thêm phần tử vào trong mảng kết quả
+            result[k] = table.bucket[i][j]; 
+            k++;
+        }
+    }
+
+    return result;
+}
+
+int max = 0;
+char maxKey = 0;
+char[] allKeys = GetAllKey(tables);
+
+for (int i = 0; i < allKeys.length; i++) {
+    if (tables[allKeys[i]] > max) {
+        max = tables[allKeys[i]];
+        maxKey = allKeys[i];
+    }
+}
+
+cout << maxKey << max;
+
+// Giống duyệt mảng có thứ tự sẵn
+for (char kitu = 'a'; kitu <= 'z'; kitu++)
+    if (tables[kitu] > max)
+        max = tables[kitu];
+
+
+
+
+
+
+
+
+
