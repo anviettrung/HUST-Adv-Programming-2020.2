@@ -15,18 +15,18 @@ bool AscendingOrder(int e_left, int e_right);
 // Sorting algorithm
 // ================================
 typedef bool (*SortOrder)(int e1, int e2);
-typedef int (*SortFunction)(int* a, int n, SortOrder ordered);
+typedef void (*SortFunction)(int* a, int n, SortOrder ordered);
 
 // --------------------------------
-int InsertionSort(int* a, int n, SortOrder ordered);
-int SelectionSort(int* a, int n, SortOrder ordered);
-int BubbleSort(int* a, int n, SortOrder ordered);
+void InsertionSort(int* a, int n, SortOrder ordered);
+void SelectionSort(int* a, int n, SortOrder ordered);
+void BubbleSort(int* a, int n, SortOrder ordered);
 // // --------------------------------
-int MergeSort(int* a, int n, SortOrder ordered);
+void MergeSort(int* a, int n, SortOrder ordered);
 void MergeSortFullCall(int* a, int left, int right, SortOrder ordered);
 void Merge(int* a, int left, int mid, int right, SortOrder ordered);
 // // --------------------------------
-int HeapSort(int* a, int n, SortOrder ordered);
+void HeapSort(int* a, int n, SortOrder ordered);
 void Heapify(int* a, int n, int nodeID, SortOrder ordered);
 // --------------------------------
 // int QuickSort(int* a, int n, SortOrder ordered);
@@ -97,7 +97,7 @@ bool AscendingOrder(int e_left, int e_right)
 // ================================
 // Sorting algorithm
 // ================================
-int InsertionSort(int* a, int n, SortOrder ordered)
+void InsertionSort(int* a, int n, SortOrder ordered)
 {
 	int key, j;
 	for (int i = 1; i < n; i++) {
@@ -112,11 +112,9 @@ int InsertionSort(int* a, int n, SortOrder ordered)
 
 		a[j + 1] = key;
 	}
-
-	return 0;
 }
 
-int SelectionSort(int* a, int n, SortOrder ordered)
+void SelectionSort(int* a, int n, SortOrder ordered)
 {
 	int min;
 	int e;
@@ -130,26 +128,20 @@ int SelectionSort(int* a, int n, SortOrder ordered)
 			}
 		Swap(&a[i], &a[e]);
 	}
-
-	return 0;
 }
 
-int BubbleSort(int* a, int n, SortOrder ordered)
+void BubbleSort(int* a, int n, SortOrder ordered)
 {
 	for (int i = 0; i < n; i++)
 		for (int j = i+1; j < n; j++)
 			if (!ordered(a[i], a[j]))
 				Swap(&a[i], &a[j]);
-
-	return 0;
 }
 
 // --------------------------------
-int MergeSort(int* a, int n, SortOrder ordered)
+void MergeSort(int* a, int n, SortOrder ordered)
 {
 	MergeSortFullCall(a, 0, n-1, ordered);
-
-	return 0;
 }
 
 void MergeSortFullCall(int* a, int left, int right, SortOrder ordered)
@@ -205,7 +197,7 @@ void Merge(int* a, int left, int mid, int right, SortOrder ordered)
 	}
 }
 // --------------------------------
-int HeapSort(int* a, int n, SortOrder ordered)
+void HeapSort(int* a, int n, SortOrder ordered)
 {
 	// Build heap
 	for (int i = n/2 - 1; i >= 0; i--)
@@ -218,8 +210,6 @@ int HeapSort(int* a, int n, SortOrder ordered)
 		// reduce heap
 		Heapify(a, i, 0, ordered);
 	}
-
-	return 0;
 }
 
 void Heapify(int* a, int n, int nodeID, SortOrder ordered)
