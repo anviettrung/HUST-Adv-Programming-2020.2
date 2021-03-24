@@ -15,3 +15,6 @@
 
 # Ignore mov
 *.mov
+
+# Ignore all file named "result"
+result*
