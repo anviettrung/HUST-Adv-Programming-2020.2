@@ -9,12 +9,17 @@ using namespace std::chrono;
 // Utility
 // ================================
 void Swap(int* a, int* b);
-bool AscendingOrder(int e_left, int e_right);
+bool AscendingOrder(int e1, int e2);
+bool DescendingOrder(int e1, int e2);
 
 // ================================
 // Sorting algorithm
 // ================================
-typedef bool (*SortOrder)(int e1, int e2);
+// Return rule
+// if (index(e1) < index(e2)) then
+//     "true"  if (e1, e2 is at right order)
+//     "false" if (e1, e2 is at wrong order)
+typedef bool (*SortOrder)(int e1, int e2); 
 typedef void (*SortFunction)(int* a, int n, SortOrder ordered);
 
 // --------------------------------
@@ -33,18 +38,23 @@ void QuickSort(int* a, int n, SortOrder ordered);
 void QuickSortFullCall(int* a, int low, int high, SortOrder ordered);
 int  Partition(int* a, int low, int high, SortOrder ordered);
 // --------------------------------
-// int ShellSort(int* a, int n, SortOrder ordered);
-// int CountingSort(int* a, int n, SortOrder ordered);
+void ShellSort(int* a, int n, SortOrder ordered);
+// void CountingSort(int* a, int n, SortOrder ordered);
 
 SortFunction f_sorts[] = {
-	InsertionSort,
-	SelectionSort,
-	BubbleSort,
-	MergeSort,
-	HeapSort,
-	QuickSort
+	InsertionSort, // 0
+	SelectionSort, // 1
+	BubbleSort,    // 2
+	MergeSort,     // 3
+	HeapSort,      // 4
+	QuickSort,     // 5
+	ShellSort      // 6
 };
 
+
+// ================================
+// MAIN PROGRAM
+// ================================
 int main()
 {
 	int n = 3, fsortIndex = 0;
@@ -84,7 +94,7 @@ int main()
 }
 
 // ================================
-// Utility
+// Utility Implement
 // ================================
 void Swap(int* a, int* b)
 {
@@ -93,13 +103,18 @@ void Swap(int* a, int* b)
 	*b = t;
 }
 
-bool AscendingOrder(int e_left, int e_right)
+bool AscendingOrder(int e1, int e2)
 {
-	return e_left <= e_right;
+	return e1 <= e2;
+}
+
+bool DescendingOrder(int e1, int e2)
+{
+	return e1 >= e2;
 }
 
 // ================================
-// Sorting algorithm
+// Sorting algorithm Implement
 // ================================
 void InsertionSort(int* a, int n, SortOrder ordered)
 {
@@ -252,7 +267,7 @@ void QuickSortFullCall(int* a, int low, int high, SortOrder ordered)
 		QuickSortFullCall(a, p_index+1, high, ordered);
 	}
 }
-int  Partition(int* a, int low, int high, SortOrder ordered)
+int Partition(int* a, int low, int high, SortOrder ordered)
 {
 	int pivot = a[high];
 	int i = (low-1);
@@ -270,5 +285,19 @@ int  Partition(int* a, int low, int high, SortOrder ordered)
     return (i + 1);
 }
 // --------------------------------
-// int ShellSort(int** a, int n, SortOrder ordered);
-// int CountingSort(int** a, int n, SortOrder ordered);
+void ShellSort(int* a, int n, SortOrder ordered)
+{
+	for (int gap = n/2; gap > 0; gap /= 2) {
+		for (int i = gap; i < n; i++) {
+			int t = a[i];
+			int j;
+
+			for (j = i; j >= gap && !ordered(a[j - gap], t); j -= gap)
+				a[j] = a[j - gap];
+
+			a[j] = t;
+		}
+	}
+}
+// --------------------------------
+// void CountingSort(int* a, int n, SortOrder ordered);
