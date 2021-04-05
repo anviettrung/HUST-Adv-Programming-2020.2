@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -7,12 +8,17 @@ int bisearch(int arr[], int val, int l, int r);
 int main(int argc, char const *argv[])
 {
 	int n, m, pos = -1;
-	int a[1000];
+	int* a;
+	ifstream ifile("number.txt");
 
-	cout << "n = ";
-	cin >> n;
-	for (int i = 0; i < n; i++)
-		cin >> a[i];
+	ifile >> n;
+	a = new int[n];
+	for (int i = 0; i < n; i++) {
+		ifile >> a[i];
+		cout << a[i] << " ";
+	}
+	cout << endl;
+	ifile.close();
 
 	// Sort
 	for (int i = 0; i < n; i++)

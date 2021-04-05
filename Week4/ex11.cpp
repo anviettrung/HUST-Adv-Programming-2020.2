@@ -1,17 +1,25 @@
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
 int main(int argc, char const *argv[])
 {
-	int n, m, min, max;
+	int m, min, max;
 	bool existM = false;
-	int a[1000];
 
-	cout << "n = ";
-	cin >> n;
-	for (int i = 0; i < n; i++)
-		cin >> a[i];
+	int n = 0;
+	int* a;
+	ifstream ifile("number.txt");
+
+	ifile >> n;
+	a = new int[n];
+	for (int i = 0; i < n; i++) {
+		ifile >> a[i];
+		cout << a[i] << " ";
+	}
+	cout << endl;
+	ifile.close();
 
 	cout << "Finding value: ";
 	cin >> m;
