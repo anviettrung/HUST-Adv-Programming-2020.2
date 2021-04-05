@@ -22,6 +22,7 @@ bool DescendingOrder(int e1, int e2);
 typedef bool (*SortOrder)(int e1, int e2); 
 typedef void (*SortFunction)(int* a, int n, SortOrder ordered);
 
+void CompareAllSort(int* a, int n, SortOrder ordered);
 // --------------------------------
 void InsertionSort(int* a, int n, SortOrder ordered);
 void SelectionSort(int* a, int n, SortOrder ordered);
@@ -39,8 +40,8 @@ void QuickSortFullCall(int* a, int low, int high, SortOrder ordered);
 int  Partition(int* a, int low, int high, SortOrder ordered);
 // --------------------------------
 void ShellSort(int* a, int n, SortOrder ordered);
-// void CountingSort(int* a, int n, SortOrder ordered);
 
+#define SortFunctionCount 7
 SortFunction f_sorts[] = {
 	InsertionSort, // 0
 	SelectionSort, // 1
@@ -48,7 +49,18 @@ SortFunction f_sorts[] = {
 	MergeSort,     // 3
 	HeapSort,      // 4
 	QuickSort,     // 5
-	ShellSort      // 6
+	ShellSort,     // 6
+	CompareAllSort // 7
+};
+
+string f_sort_names[] = {
+	"Insertion Sort", // 0
+	"Selection Sort", // 1
+	"Bubble Sort",    // 2
+	"Merge Sort",     // 3
+	"Heap Sort",      // 4
+	"Quick Sort",     // 5
+	"Shell Sort"      // 6
 };
 
 
@@ -75,19 +87,23 @@ int main()
 	fin.close();
 
 	// PROCESS
-	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+	if (fsortIndex < SortFunctionCount) {
+		high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-	f_sorts[fsortIndex](arr, n, AscendingOrder);
+		f_sorts[fsortIndex](arr, n, AscendingOrder);
 
-	high_resolution_clock::time_point t2 = high_resolution_clock::now();
-	milliseconds ms_int = duration_cast<milliseconds>(t2 - t1);
-	int sort_time = ms_int.count();
+		high_resolution_clock::time_point t2 = high_resolution_clock::now();
+		milliseconds ms_int = duration_cast<milliseconds>(t2 - t1);
+		int sort_time = ms_int.count();
 
-	// OUTPUT
-	cout << "Runtime: " << sort_time << "ms" << endl;
+		// OUTPUT
+		cout << "Runtime: " << sort_time << "ms" << endl;
 
-	for (int i = 0; i < n; i++)
-		fout << arr[i] << endl;
+		for (int i = 0; i < n; i++)
+			fout << arr[i] << endl;
+	} else {
+		f_sorts[fsortIndex](arr, n, AscendingOrder);
+	}
 
 	fout.close();
 	return 0;
@@ -111,6 +127,33 @@ bool AscendingOrder(int e1, int e2)
 bool DescendingOrder(int e1, int e2)
 {
 	return e1 >= e2;
+}
+
+void CompareAllSort(int* a, int n, SortOrder ordered)
+{
+	cout << "----------------------------------" << endl
+		 << "Sort Algorithm Name |Runtime     |" << endl
+		 << "----------------------------------" << endl;
+
+	int* temp = new int[n];
+	for (int k = 0; k < SortFunctionCount; k++) {
+		for (int i = 0; i < n; i++)
+			temp[i] = a[i];
+
+		// PROCESS
+		high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
+		f_sorts[k](temp, n, ordered);
+
+		high_resolution_clock::time_point t2 = high_resolution_clock::now();
+
+		milliseconds ms_int = duration_cast<milliseconds>(t2 - t1);
+		int sort_time = ms_int.count();
+
+		// OUTPUT
+		cout << std::left  << setw(20) << f_sort_names[k] << "|" 
+			 << std::right << setw(10) << sort_time << "ms|" << endl;
+	}
 }
 
 // ================================
