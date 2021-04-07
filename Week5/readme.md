@@ -1,4 +1,4 @@
-# Tuần 3: Thuật toán sắp xếp và 
+# Tuần 5: Thuật toán sắp xếp và nạp chồng toán tử
 ## Part 1: Sorting Program
 Chương trình *sort* được trang bị các thuật toán sắp xếp dữ liệu và cấu trúc để người lập trình có thể tự định nghĩa cách sắp xếp (tăng dần, giảm dần,...)
 

@@ -2,8 +2,8 @@
 
 using namespace std;
 
-long fibonaci(int n) {
-	int a[2];
+long long fibonaci(int n) {
+	long long a[2];
 	int c = 3;
 
 	a[0] = a[1] = 1;
