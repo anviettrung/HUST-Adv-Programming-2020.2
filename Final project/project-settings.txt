@@ -1,2 +1,4 @@
 input.txt
-output-log.txt
+output.txt
+9
+0.001

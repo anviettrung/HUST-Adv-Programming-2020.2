@@ -1,4 +1,8 @@
 #include <iostream>
+#include <math.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include "adv_print.h"
 
 using namespace std;
 
@@ -8,6 +12,11 @@ using namespace std;
 typedef struct Interval {
 	double left;
 	double right;
+
+	Interval(double l = 0, double r = 0) {
+		left = l;
+		right = r;
+	}
 } Interval;
 
 typedef struct PNode {
@@ -21,7 +30,7 @@ class Polynomial {
 private:
 	PNode* head;
 	Interval root_interval; // Miền chứa nghiệm
-	double* extremum;
+	double* extrema;
 
 public:
 	Polynomial() { head = NULL; }
@@ -178,7 +187,6 @@ public:
 				cur = cur->next;
 			}
 			
-			printf("max:%.3f\nhead:%.3f\nm:%d\n", max, head->coeff, m);
 			return 1 + pow(-max / head->coeff, 1.0f / m);
 		} else {
 			return 0;
@@ -188,7 +196,7 @@ public:
 	void Find_Root_Interval() {
 		root_interval.right = Find_Root_Interval_Upper_Edge();
 
-		// Temporary change f(x) -> f(-x)
+		// Temporary change f(x) to f(-x)
 		Reverse_Odd_Exponent_Sign();
 
 		root_interval.left = -Find_Root_Interval_Upper_Edge();
@@ -202,15 +210,48 @@ public:
 	}
 };
 
-double NewtonRaphson(Polynomial* f, double x) {
+int sign(double x) {
+	return x < 0 ? 0 : 1;
+}
+
+double Newton_Raphson(Polynomial* f, double x) {
 	double h = f->F(x) / f->dF(x);
 
-	while (abs(h) >= EPSILON) {
+	while (fabs(h) >= EPSILON) {
 		h = f->F(x) / f->dF(x);
 		x = x - h;
 	}
 
 	return x;
+}
+
+double Newton_Raphson(Polynomial* f, double a, double b, int n) {
+	return 0;
+}
+
+double Newton_Raphson(Polynomial* f, double a, double b, double e) {
+	return 0;
+}
+
+Interval Bisection(Polynomial* f, double a, double b, double dist) {
+	Interval res;
+	double c = 0;
+	while (fabs(a - b) > dist) {
+		c = (a + b) / 2;
+		if ( sign(f->F(c)) == sign(f->F(b)) )
+			b = c;
+		else
+			a = c;
+	}
+
+	res.left = a;
+	res.right = b;
+
+	return res;
+}
+
+void Bisection(Polynomial* f, Interval* interval, double dist) {
+	*interval = Bisection(f, interval->left, interval->right, dist); 
 }
 
 
@@ -225,6 +266,12 @@ int main()
 	f.Insert_Node(-4, 3);
 	f.Insert_Node(1, 4);
 
+	// f.Insert_Node(3, 0);
+	// f.Insert_Node(5, 1);
+	// f.Insert_Node(7, 2);
+	// f.Insert_Node(4, 3);
+	// f.Insert_Node(1, 4);
+
 	f.Print();
 
 	cout.precision(3);
@@ -232,8 +279,12 @@ int main()
 	f.Find_Root_Interval();
 	f.Print_Root_Interval();
 	cout << endl;
+
+	Interval res = Bisection(&f, 0, 2.5f, 0.5f);
+	cout << res.left << " " << res.right << endl;
+
 	// cout << f.dF(2) << endl;
- 	//cout << "The value of the root is : " << NewtonRaphson(&f, -20) << endl;
+ 	//cout << "The value of the root is : " << Newton_Raphson(&f, -20) << endl;
 
 	return 0;
 }
