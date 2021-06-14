@@ -340,21 +340,30 @@ double Polynomial::Err_Target_Form(double x, double m) {
 }
 
 double Polynomial::Err_DA_Form(double x, double px, double m, double M) {
-	return (M - m) * fabs(x - px) / m;
+	return M * (x - px) * (x - px) / (2 * m);
 }
 
 // ============================
 // Khai triển Thuật toán tiếp tuyến
 // ============================
 double Newton_Raphson(Polynomial* f, double a, double b, int n, bool print_state) {
-	double x = a;
+	double x, x0;
 	double px = 0;
 	int count = 0;
 	double m = min( fabs(f->dF(a)), fabs(f->dF(b)) );
-	double M = max( fabs(f->dF(a)), fabs(f->dF(b)) );
+	double M = max( fabs(f->ddF(a)), fabs(f->ddF(b)) );
 	double err;
 
+	// Chọn điểm Fourier
+	if (sign(f->F(a)) == sign(f->ddF(a))) {
+		x0 = a;
+	} else {
+		x0 = b;
+	}
+
 	// CT sai số 1
+	x = x0;
+	count = 0;
 	if (print_state) {
 		print("\t1. Sai số theo công thức mục tiêu\n");
 		print_multiple_char('_', 2 * p_precision + 20);
@@ -375,7 +384,7 @@ double Newton_Raphson(Polynomial* f, double a, double b, int n, bool print_state
 	} while (count < n);
 
 	// CT sai số 2
-	x = a;
+	x = x0;
 	count = 0;
 	if (print_state) {
 		print("\t1. Sai số theo công thức hai xấp xỉ liên tiếp\n");
@@ -401,15 +410,23 @@ double Newton_Raphson(Polynomial* f, double a, double b, int n, bool print_state
 }
 
 double Newton_Raphson_Err_Formula(Polynomial* f, double a, double b, double e, bool print_state) {
-	double x = a;
+	double x, x0;
 	double px = 0;
 	int count = 0;
 	double m = min( fabs(f->dF(a)), fabs(f->dF(b)) );
-	double M = max( fabs(f->dF(a)), fabs(f->dF(b)) );
-	double c = fabs((m * e) / (M - m));
+	double M = max( fabs(f->ddF(a)), fabs(f->ddF(b)) );
 	double err;
 
+	// Chọn điểm Fourier
+	if (sign(f->F(a)) == sign(f->ddF(a))) {
+		x0 = a;
+	} else {
+		x0 = b;
+	}
+
 	// CT sai số 1
+	x = x0;
+	count = 0;
 	if (print_state) {
 		print("\t1. Sai số theo công thức mục tiêu\n");
 		print_multiple_char('_', 2 * p_precision + 20);
@@ -430,7 +447,7 @@ double Newton_Raphson_Err_Formula(Polynomial* f, double a, double b, double e, b
 	} while (err > e);
 
 	// CT sai số 2
-	x = a;
+	x = x0;
 	count = 0;
 	if (print_state) {
 		print("\t1. Sai số theo công thức hai xấp xỉ liên tiếp\n");
@@ -450,17 +467,26 @@ double Newton_Raphson_Err_Formula(Polynomial* f, double a, double b, double e, b
 			print_multiple_char('-', 2 * p_precision + 20);
 		}
 
-	} while (fabs(x - px) >= c);
+	} while (err > e);
 
 	return x;
 }
 
 
 double Newton_Raphson(Polynomial* f, double a, double b, double e, bool print_state) {
-	double x = a;
+	double x, x0;
 	double px = 0;
 	int count = 0;
 
+	// Chọn điểm Fourier
+	if (sign(f->F(a)) == sign(f->ddF(a))) {
+		x0 = a;
+	} else {
+		x0 = b;
+	}
+
+	x = x0;
+	
 	if (print_state) {
 		print_multiple_char('_', 2 * p_precision + 20);
 		print("\t|%-12s|%-*s|%-*s|\n", "Lần lặp", p_precision+4, "x", p_precision+6, "Sai số");

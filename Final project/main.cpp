@@ -167,13 +167,9 @@ void Function_Layout(char id)
 			scanf("%d", &n);
 			print("\tSố lần lặp n là %d\n", n);
 
-			switch (Read_Interval_Layout(&interval)) {
-				case 1:
+			if (Read_Interval_Layout(&interval)) {
 				x0 = Newton_Raphson(&poly, interval.left, interval.right, n, true);
 				print("\n\tNghiệm x là %.*lf\n", precision, x0);
-				break;
-				case 2:
-				break;
 			}
 
 			break;
@@ -181,26 +177,18 @@ void Function_Layout(char id)
 			print_command("Tìm nghiệm gần đúng với sai số e");
 			e = Read_Epsilon_Layout();
 
-			switch (Read_Interval_Layout(&interval)) {
-				case 1:
+			if (Read_Interval_Layout(&interval)) {
 				x0 = Newton_Raphson_Err_Formula(&poly, interval.left, interval.right, e, true);
 				print("\n\tNghiệm x là %.*lf\n", precision, x0);
-				break;
-				case 2:
-				break;
 			}
 			break;
 		case '5':
 			print_command("Tìm nghiệm gần đúng x_n");
 			e = Read_Epsilon_Layout();
 
-			switch (Read_Interval_Layout(&interval)) {
-				case 1:
-					x0 = Newton_Raphson(&poly, interval.left, interval.right, e, true);
-					print("\n\tNghiệm x_n là %.*lf\n", precision, x0);
-					break;
-				case 2:
-				break;
+			if (Read_Interval_Layout(&interval)) {
+				x0 = Newton_Raphson(&poly, interval.left, interval.right, e, true);
+				print("\n\tNghiệm x_n là %.*lf\n", precision, x0);
 			}
 			break;
 
@@ -217,23 +205,15 @@ int Read_Interval_Layout(Interval* res)
 {
 	bool valid;
 
-	printf("\"Nhập (a, b) = (0, 0) nếu muốn sử dụng các khoảng phân ly mặc định!\"\n");
 	printf("Nhập khoảng phân ly (a, b) = ");
 	*res = Read_Interval();
 
-	valid = res->left != 0 || res->right != 0;
-	if (valid) {
-		print("\tKhoảng phân ly đã nhập là (%.*lf, %.*lf)\n", precision, res->left, precision, res->right);
-		if (poly.Is_KPL(*res) == false) {
-			print("\tKhoảng đã nhập không phải khoảng phân ly!\n");
-			return 0;
-		}
-		return 1;
+	print("\tKhoảng phân ly đã nhập là (%.*lf, %.*lf)\n", precision, res->left, precision, res->right);
+	if (poly.Is_KPL(*res) == false) {
+		print("\tKhoảng đã nhập không phải khoảng phân ly!\n");
+		return 0;
 	}
-	else {
-		print("\tSử dụng các khoảng phân ly mặc định\n");
-		return 2;
-	}
+	return 1;
 }
 
 double Read_Epsilon_Layout()
@@ -249,4 +229,3 @@ double Read_Epsilon_Layout()
 
 	return e;
 }
-
